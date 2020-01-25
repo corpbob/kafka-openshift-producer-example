@@ -1,3 +1,4 @@
+# First, Download kafka and unpack to $KAFKA_HOME which you will define.
 # Start Kafka
 
 ```
