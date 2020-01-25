@@ -39,33 +39,30 @@ public class KafkaClient {
 	}
 
 	public void init(@Observes StartupEvent ev) {
+		
+		Properties props = new Properties();
+
+		props.put("bootstrap.servers", kafkaBootStrapServers);
+		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+		
 
 		if (null == topic || "".equals(topic)) {
 			topic = "default-topic";
 		}
 
-		if (null == trustStore || "".equals(trustStore)) {
-			throw new RuntimeException("No truststore defined");
+		if (null != trustStore) {
+			props.put("ssl.truststore.location", trustStore);
 		}
 
-		if (null == trustStorePassword || "".equals(trustStorePassword)) {
-			throw new RuntimeException("No truststore password defined");
+		if (null != trustStorePassword) {
+			props.put("ssl.truststore.password", trustStorePassword);
 		}
 		
 		if (null == kafkaBootStrapServers || "".equals(kafkaBootStrapServers)) {
 			throw new RuntimeException("No kafka bootstrap servers");
 		}
 		
-		
-
-		Properties props = new Properties();
-
-		props.put("bootstrap.servers", kafkaBootStrapServers);
-		props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-		props.put("ssl.truststore.location", trustStore);
-		props.put("ssl.truststore.password", trustStorePassword);
-
 		producer = new KafkaProducer<String, String>(props);
 	}
 
